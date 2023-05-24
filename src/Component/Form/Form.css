@@ -1,0 +1,80 @@
+
+.formleft p {
+   font-weight: 500;
+}
+.image{
+    width: 250px;
+    height: 160px;
+    background: transparent;
+}
+.formleft h1{
+    color: white;
+}
+.formleft p{
+    color: white;
+}
+.formdiv{
+    background-image: url("../image/bg-image.jpeg");
+    display: flex;
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 50%;
+    height: 400px;
+    text-align: center;
+    padding: 15px;
+    box-shadow: rgba(0, 0, 0, 0.75) 0px 5px 15px;
+    align-items: center;
+    margin: 0 auto;
+    margin-top: 80px;
+    
+}
+
+.formright{
+    width: 100%;
+    padding: 20px;
+}
+
+.formright input{
+    width: 100%;
+    height: 40px;
+    border-radius: 10px;
+    margin-top: 20px;
+    /* margin-left: 30px; */
+    outline: none;
+}
+.formright button{
+    width: 100%;
+    height: 40px;
+    border-radius: 10px;
+    margin-top: 20px;
+    background-color: blue;
+    color: white;
+    border: 0;
+    box-shadow: 2px 2px 2px blue;
+}
+button:hover{
+    background-color: aqua;
+    color: black;
+}
+.button:active{
+    transform: translateY(2px);
+}
+.formright textarea{
+    width: 100%;
+    border-radius: 10px;
+    margin-top: 20px;
+    /* margin-left: 20px; */
+    outline: none;
+}
+
+
+@media screen and (max-width: 480px) {
+    .formdiv {
+        flex-direction: column;
+        height: 700px;
+        width: 90%;
+        margin:unset;
+        overflow-x: hidden;
+    }
+}
+   
