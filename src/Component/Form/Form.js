@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import "./Form.css";
 import { toast } from "react-toastify";
 import * as Yup from "yup";
@@ -18,8 +18,8 @@ const Form = () => {
 
   const [errors, setErrors] = useState({});
 
-  useEffect(() => {
-    validationSchema
+  const validate = async (formData) => {
+    return validationSchema
       .validate(formData, { abortEarly: false })
       .then(() => {
         setErrors({});
@@ -30,20 +30,30 @@ const Form = () => {
           errorsObj[error.path] = error.message;
         });
         setErrors(errorsObj);
+
+        return errorsObj;
       });
-  }, [formData, validationSchema]);
+  };
+
+  useEffect(() => {
+    //useEffect validation results in excessive rerendering even with the use of useCallback which should limit that by what's similar to caching
+  }, []);
 
   const handle_input_change = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (Object.keys(errors).length > 0) {
-        toast.warning("Please fix all form errors");
-        return;
-      }
+    //perform validation with yup
+    const errors = await validate(formData);
+    console.log(errors);
+    if (errors && Object.keys(errors).length > 0) {
+      toast.warning("Please fix all form errors");
+      return;
+    }
+
     // Display success message or perform further actions
     toast.success("Form submitted successfully!");
 
@@ -61,40 +71,51 @@ const Form = () => {
       <div className="formleft">
         <h1>CONTACT US</h1>
         <p>We will like to hear from you</p>
-        <img
-          className="image"
-          src="./animation_500_li1nqkaj.gif"
-          alt=""
-        />
+        <img className="image" src="./animation_500_li1nqkaj.gif" alt="" />
       </div>
 
       <form className="formright">
-        <input
-          type="text"
-          id="name"
-          name="name"
-          placeholder="Name"
-          value={name}
-          onChange={handle_input_change}
-        />
+        <div className="formGroup">
+          {Object.keys(errors).length > 0 && errors.name && (
+            <p className="error">{errors.name}</p>
+          )}
+          <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Name"
+            value={name}
+            onChange={handle_input_change}
+          />
+        </div>
 
-        <input
-          type="text"
-          id="email"
-          name="email"
-          placeholder="Email"
-          value={email}
-          onChange={handle_input_change}
-        />
+        <div className="formGroup">
+          {Object.keys(errors).length > 0 && errors.email && (
+            <p className="error">{errors.email}</p>
+          )}
+          <input
+            type="text"
+            id="email"
+            name="email"
+            placeholder="Email"
+            value={email}
+            onChange={handle_input_change}
+          />
+        </div>
 
-        <textarea
-          rows="6"
-          cols="34"
-          name="message"
-          placeholder="Type your message here"
-          value={message}
-          onChange={handle_input_change}
-        ></textarea>
+        <div className="formGroup">
+          {Object.keys(errors).length > 0 && errors.message && (
+            <p className="error">{errors.message}</p>
+          )}
+          <textarea
+            rows="6"
+            cols="34"
+            name="message"
+            placeholder="Type your message here"
+            value={message}
+            onChange={handle_input_change}
+          ></textarea>
+        </div>
 
         <button onClick={handleSubmit}>Submit</button>
       </form>
